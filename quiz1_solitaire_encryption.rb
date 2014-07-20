@@ -4,25 +4,18 @@
 
 $deck = nil
 
-# decrypt ciphertext
-def decrypt
-  cipher = ARGV[1]
-  $deck = format_deck(ARGV[2])
-  int_cipher = str_to_ints cipher
-  keystream = keystream_sequence(cipher.gsub(/ /, '').length)
-  int_keystream = str_to_ints keystream
-  subbed_cipher = subtract(int_cipher, int_keystream)
-  ints_to_str subbed_cipher
-end
-
-# encrypt plaintext
-def encrypt
+# encrypt/decrypt ciphertext
+def crypt(method)
   input = format_input
   $deck = format_deck(ARGV[2])
   keystream = keystream_sequence(input.gsub(/ /, '').length)
-  input = str_to_ints(input)
-  keystream = str_to_ints(keystream)
-  sum = add(input, keystream)
+  input = str_to_ints input
+  keystream = str_to_ints keystream
+  if method == :decrypt
+    sum = subtract(input, keystream)
+  else
+    sum = add(input, keystream)
+  end
   ints_to_str sum
 end
 
@@ -31,8 +24,7 @@ def format_input
   str = ARGV[1].gsub(/[^a-zA-Z]+/, '').upcase
   divided = []
   while str.length > 0
-    word = str.slice(0, 5)
-    str.slice!(0, 5)
+    word = str.slice!(0, 5)
     while word.length < 5
       word += "X"
     end
@@ -45,11 +37,7 @@ end
 def format_deck(deck)
   deck.split(',').map do |n|
     n = n.strip
-    if ['A', 'B'].include? n
-      n
-    else
-      n.to_i
-    end
+    ['A', 'B'].include?(n) ? n : n.to_i
   end
 end
 
@@ -106,8 +94,10 @@ def keystream_sequence(len)
   i = 0
   while str.gsub(/ /, '').length < len do
     letter = keystream_letter
-    str += ' ' if i % 5 == 0 && i != 0 && letter != ''
-    i += 1 unless letter.empty?
+    unless letter.empty?
+      str += ' ' if i % 5 == 0 && i != 0
+      i += 1
+    end
     str += letter
   end
   str
@@ -174,15 +164,10 @@ end
 def count_down
   top_card = $deck.first
   top_card = 53 if ['A', 'B'].include? top_card
-  if ['A', 'B'].include? $deck[top_card]
-    return ''
-  end
+  chosen_number = $deck[top_card]
+  return '' if ['A', 'B'].include? chosen_number
 
-  if ($deck[top_card] > 26)
-    ($deck[top_card] + 38).chr
-  else
-    ($deck[top_card] + 64).chr
-  end
+  (chosen_number + (chosen_number > 26 ? 38 : 64)).chr
 end
 
 # command line action toggler
@@ -191,9 +176,9 @@ def control
     raise 'Usage: ruby solitaire.rb encrypt "Message to be encrypted" "3, 25, 26, 28, 12, 49, 51, 4, 10, 36, 8, 22, 34, 39, 2, 23, 1, 47, 5, A, 17, 30, 48, 19, 45, 42, 46, 32, 21, B, 43, 35, 40, 37, 29, 44, 38, 14, 11, 16, 41, 15, 9, 24, 50, 7, 18, 33, 27, 52, 31, 13, 6, 20"'
   end
   if ARGV[0] == 'encrypt'
-    puts encrypt
+    puts crypt :encrypt
   elsif ARGV[0] == 'decrypt'
-    puts decrypt
+    puts crypt :decrypt
   else
     raise "unknown"
   end
