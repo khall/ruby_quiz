@@ -41,6 +41,7 @@ def format_input
   divided.join ' '
 end
 
+# parse deck from command line
 def format_deck(deck)
   deck.split(',').map do |n|
     n = n.strip
@@ -184,6 +185,7 @@ def count_down
   end
 end
 
+# command line action toggler
 def control
   if ARGV.length != 3
     raise 'Usage: ruby solitaire.rb encrypt "Message to be encrypted" "3, 25, 26, 28, 12, 49, 51, 4, 10, 36, 8, 22, 34, 39, 2, 23, 1, 47, 5, A, 17, 30, 48, 19, 45, 42, 46, 32, 21, B, 43, 35, 40, 37, 29, 44, 38, 14, 11, 16, 41, 15, 9, 24, 50, 7, 18, 33, 27, 52, 31, 13, 6, 20"'
