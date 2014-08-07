@@ -722,3 +722,156 @@ def huge_sum_first_ten_digits(num_list)
   nums = num_list.map{|num| num.to_i}
   nums.inject(0) {|sum, i| sum + i}.to_s[0..9]
 end
+
+# project euler 14
+def collatz_sequence(num, sequence = [])
+  sequence << num
+  return sequence if num == 1
+  if num.odd?
+    collatz_sequence(num * 3 + 1, sequence)
+  else
+    collatz_sequence(num / 2, sequence)
+  end
+end
+
+def longest_collatz(max_num)
+  longest = []
+  (max_num + 1).times do |i|
+    seq = collatz_sequence(i + 1)
+    longest = seq if seq.length > longest.length
+  end
+  longest
+end
+
+# project euler 15
+def lattice_paths(size_x, size_y)
+  grid = Array.new(size_x + 1) { Array.new(size_y + 1) {0} }
+  grid[size_x][size_y] = 1
+
+  cur_x = size_x
+
+  while cur_x >= 0
+    cur_y = size_y
+    while cur_y >= 0
+      val = add_adjacent(grid, cur_x, cur_y)
+      puts "#{cur_x}, #{cur_y} = #{val}"
+      grid[cur_x][cur_y] = val unless cur_x == size_x && cur_y == size_y # bottom right is always 1, ignore it
+      cur_y -= 1
+    end
+    cur_x -= 1
+  end
+  grid[0][0]
+end
+
+def add_adjacent(grid, x, y)
+  x_length = grid.length
+  y_length = grid[0].length
+  adj_x = if x + 1 >= x_length
+    0
+  else
+    grid[x + 1][y]
+  end
+  adj_y = if y + 1 >= y_length
+    0
+  else
+    grid[x][y + 1]
+  end
+  adj_x + adj_y
+end
+
+# project euler 16
+def power_digit_sum(num, power)
+  big_num = num ** power
+  big_num.to_s.chars.inject(0) {|sum, i| sum + i.to_i}
+end
+
+# project euler 17
+require 'byebug'
+class Fixnum
+  def to_words
+    places = {3 => 'hundred', 4 => 'thousand'}
+    ones = {'0' => '', '1' => 'one', '2' => 'two', '3' => 'three', '4' => 'four', '5' => 'five', '6' => 'six', '7' => 'seven', '8' => 'eight', '9' => 'nine'}
+    teens = {'10' => 'ten', '11' => 'eleven', '12' => 'twelve', '13' => 'thirteen', '14' => 'fourteen',
+             '15' => 'fifteen', '16' => 'sixteen', '17' => 'seventeen', '18' => 'eighteen', '19' => 'nineteen'}
+    tens = {'2' => 'twenty', '3' => 'thirty', '4' => 'forty', '5' => 'fifty', '6' => 'sixty', '7' => 'seventy', '8' => 'eighty', '9' => 'ninety'}
+
+    return 'zero' if self == 0
+    words = ''
+    digits = self.to_s.chars
+
+    while digits.length > 2
+      if digits.length >= 3
+        d = digits[0]
+        if d != '0'
+          words += ones[d] + ' '
+          words += places[digits.length] + ' '
+          words += 'and ' if digits.length == 3 && (digits[1] != '0' || digits[2] != '0')
+        end
+        digits = digits[1..-1]
+      end
+    end
+
+    if digits.length == 2
+      if digits[0] == '1'
+        words += teens[digits[0] + digits[1]] + ' '
+        return words.strip
+      # elsif digits[0] == '0' && digits[1] == '0'
+      #   return words.strip
+      elsif digits[0] == '0'
+      #   words += ones[digits[1]] + ' '
+      #   return words.strip
+      else
+        words += tens[digits[0]] + ' '
+      end
+      digits = digits[1..-1]
+    end
+
+    words += ones[digits[0]]
+    words.strip
+  end
+end
+
+require 'test/unit'
+
+class TestNumToWords < Test::Unit::TestCase
+  def test_to_words_0
+    assert_equal 'zero', 0.to_words
+  end
+
+  def test_to_words_1
+    assert_equal 'one', 1.to_words
+  end
+
+  def test_to_words_27
+    assert_equal 'twenty seven', 27.to_words
+  end
+
+  def test_to_words_100
+    assert_equal 'one hundred', 100.to_words
+  end
+
+  def test_to_words_112
+    assert_equal 'one hundred and twelve', 112.to_words
+  end
+
+  def test_to_words_890
+    assert_equal 'eight hundred and ninety', 890.to_words
+  end
+
+  def test_to_words_894
+    assert_equal 'eight hundred and ninety four', 894.to_words
+  end
+
+  def test_to_words_1000
+    assert_equal 'one thousand', 1000.to_words
+  end
+end
+
+def sum_word_numbers(max)
+  length_sum = 0
+  max.times do |i|
+    puts "#{(i + 1).to_words.gsub(/ /, '')} = #{(i + 1).to_words.gsub(/ /, '').length}"
+    length_sum += (i + 1).to_words.gsub(/ /, '').length
+  end
+  length_sum
+end
