@@ -875,3 +875,29 @@ def sum_word_numbers(max)
   end
   length_sum
 end
+
+# project euler 18 & 67 (just change the file being read in)
+def read_triangle_file
+  triangle_array = []
+  file = File.open('euler_67.txt', 'r')
+  file.each_line do |line|
+    triangle_array << line.split(' ')
+  end
+  triangle_array
+end
+
+def bottom_to_top_maximums
+  triangle_array = read_triangle_file
+  cur_row = triangle_array.length - 2
+  row_array = triangle_array.last
+
+  while cur_row >= 0
+    new_array = []
+    triangle_array[cur_row].each_index do |i|
+      new_array << [row_array[i].to_i, row_array[i + 1].to_i].max + triangle_array[cur_row][i].to_i
+    end
+    row_array = new_array
+    cur_row -= 1
+  end
+  row_array
+end
