@@ -944,7 +944,7 @@ def factorial_digits_sum(n)
 end
 
 # project euler 21
-def factors(num)
+def proper_divisors(num)
   list = []
   (num - 1).times do |n|
     list << (n + 1) if num % (n + 1) == 0
@@ -955,8 +955,8 @@ end
 def find_amicable_numbers(max)
   amicable_nums = []
   max.times do |num|
-    sum = factors(num + 1).inject(0) {|sum, i| sum + i}
-    amicable_nums << num + 1 if factors(sum).inject(0) {|sum, i| sum + i} == (num + 1) && sum != (num + 1)
+    sum = proper_divisors(num + 1).inject(0) {|sum, i| sum + i}
+    amicable_nums << num + 1 if proper_divisors(sum).inject(0) {|sum, i| sum + i} == (num + 1) && sum != (num + 1)
   end
   amicable_nums.inject(0) {|sum, i| sum + i}
 end
@@ -981,4 +981,61 @@ def calculate_score
     scores << name_to_int(names[i]) * (i + 1)
   end
   scores.inject(0) {|sum, i| sum + i}
+end
+
+# project euler 23
+def proper_divisors(num)
+  list = []
+  (num - 1).times do |n|
+    list << (n + 1) if num % (n + 1) == 0
+  end
+  list
+end
+
+MAX_NON_ABUNDANT = 28_123
+def non_abundant_sums
+  abundants = abundant_nums MAX_NON_ABUNDANT
+  non_abundant = []
+  MAX_NON_ABUNDANT.times do |n|
+    puts n + 1
+    abundant_match_found = false
+    abundants.each do |abundant|
+      break if abundant > n + 1
+      possible_match = n + 1 - abundant
+      if abundants.include?(possible_match)
+        abundant_match_found = true
+        break
+      end
+    end
+    non_abundant << n + 1 unless abundant_match_found
+  end
+  non_abundant
+end
+
+def abundant_nums(max)
+  list = []
+  max.times do |n|
+    sum = proper_divisors(n + 1).inject(0) {|sum, i| sum + i}
+    list << n + 1 if sum > n + 1
+  end
+  list
+end
+
+# project euler 24
+def lexicographic_permutations
+  [0,1,2,3,4,5,6,7,8,9].permutation.sort[999_999].join
+end
+
+# project euler 25
+def fibonacci_digits(digits)
+  two_back = 1
+  one_back = 1
+  i = 2
+  while one_back.to_s.length < digits
+    num = one_back + two_back
+    two_back = one_back
+    one_back = num
+    i += 1
+  end
+  i
 end
