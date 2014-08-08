@@ -901,3 +901,45 @@ def bottom_to_top_maximums
   end
   row_array
 end
+
+# project euler 19
+def twentieth_century_sundays
+  # 1900/01/01 was a Monday, 1900 is not a leap year
+  # thus 364 days later (1900/12/31) was a Monday, and 1901/01/06 was a Sunday
+  year = 1901
+  month = 0
+  day = 6
+  first_of_month_sunday = 0
+  while year < 2001
+    days_of_months = [31, leap_year?(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    while day <= days_of_months[month]
+      day += 7
+      if day > days_of_months[month]
+        day -= days_of_months[month]
+        month += 1
+        first_of_month_sunday += 1 if day == 1
+        puts "Sunday on #{year}/#{month + 1}/#{day}" if day == 1
+      end
+      break if month > days_of_months.length - 1
+    end
+    year += 1
+    month = 0
+  end
+  first_of_month_sunday
+end
+
+def leap_year?(year)
+  year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+end
+
+# project euler 20
+def factorial_digits_sum(n)
+  product = 1
+
+  n.times do |n|
+    product *= (n + 1)
+  end
+
+  product.to_s.chars.inject(0) {|sum, i| sum + i.to_i }
+end
+
