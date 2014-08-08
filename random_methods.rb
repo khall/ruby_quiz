@@ -943,3 +943,42 @@ def factorial_digits_sum(n)
   product.to_s.chars.inject(0) {|sum, i| sum + i.to_i }
 end
 
+# project euler 21
+def factors(num)
+  list = []
+  (num - 1).times do |n|
+    list << (n + 1) if num % (n + 1) == 0
+  end
+  list
+end
+
+def find_amicable_numbers(max)
+  amicable_nums = []
+  max.times do |num|
+    sum = factors(num + 1).inject(0) {|sum, i| sum + i}
+    amicable_nums << num + 1 if factors(sum).inject(0) {|sum, i| sum + i} == (num + 1) && sum != (num + 1)
+  end
+  amicable_nums.inject(0) {|sum, i| sum + i}
+end
+
+# project euler 22
+def read_names(filename)
+  File.open(filename, 'r').read.gsub(/"/, '').split(',').sort
+end
+
+def name_to_int(name)
+  score = 0
+  name.upcase.each_byte do |num|
+    score += num - 'A'.bytes[0] + 1
+  end
+  score
+end
+
+def calculate_score
+  scores = []
+  names = read_names 'euler_22.txt'
+  names.each_index do |i|
+    scores << name_to_int(names[i]) * (i + 1)
+  end
+  scores.inject(0) {|sum, i| sum + i}
+end
