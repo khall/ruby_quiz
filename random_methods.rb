@@ -1047,7 +1047,6 @@ def longest_recurring_decimal(max)
   longest_num = nil
   max.times do |i|
     decimal = (BigDecimal.new(10 ** 10_000) / BigDecimal.new(i + 1)).to_s('F').gsub(/\./, '')
-    puts "#{i + 1}: #{decimal}"
     loop = looping_string decimal
     if loop.length > longest_recurring.length
       longest_recurring = loop
