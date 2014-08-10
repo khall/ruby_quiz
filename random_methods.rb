@@ -1039,3 +1039,45 @@ def fibonacci_digits(digits)
   end
   i
 end
+
+# project euler 26
+require 'bigdecimal'
+def longest_recurring_decimal(max)
+  longest_recurring = ''
+  longest_num = nil
+  max.times do |i|
+    decimal = (BigDecimal.new(10 ** 10_000) / BigDecimal.new(i + 1)).to_s('F').gsub(/\./, '')
+    puts "#{i + 1}: #{decimal}"
+    loop = looping_string decimal
+    if loop.length > longest_recurring.length
+      longest_recurring = loop
+      longest_num = i + 1
+    end
+  end
+  longest_num
+end
+
+def looping_string(string)
+  start = 0
+  length = 1
+  looped_str = ''
+  matching = false
+
+  while test = string.slice(start, length)
+    break if (matching && test == looped_str) || start >= string.length
+    index = string[start + 1..-1].index(test)
+    if !index.nil?
+      index += 1
+      looped_str = string.slice(start, index)
+      start = index + start
+      length = looped_str.length
+      matching = true
+    else
+      matching = false
+      looped_str = ''
+      start += 1
+    end
+  end
+
+  looped_str
+end
