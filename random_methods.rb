@@ -1080,3 +1080,34 @@ def looping_string(string)
 
   looped_str
 end
+
+# project euler 27
+def quadratic_checker(max)
+  best = {a: 0, b: 0, n: 0, primes: 0}
+
+  a = -1000
+  while a < max
+    b = -1000
+    while b < max
+      cur_primes = 0
+      n = 0
+      while n < max
+        if (n ** 2 + a * n + b).prime?
+          cur_primes += 1
+          n += 1
+        else
+          break
+        end
+      end
+      if cur_primes > best[:primes]
+        best[:a] = a
+        best[:b] = b
+        best[:n] = n
+        best[:primes] = cur_primes
+      end
+      b += 1
+    end
+    a += 1
+  end
+  best[:a] * best[:b]
+end
