@@ -1111,3 +1111,22 @@ def quadratic_checker(max)
   end
   best[:a] * best[:b]
 end
+
+# project euler 28
+def number_spiral(size)
+  last_num = size ** 2
+  i = 1
+  increment = 2
+  sum = i
+  four_corners = 4
+  while i < last_num
+    i += increment
+    sum += i
+    four_corners -= 1
+    if four_corners < 1
+      increment += 2
+      four_corners = 4
+    end
+  end
+  sum
+end
