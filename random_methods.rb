@@ -1130,3 +1130,37 @@ def number_spiral(size)
   end
   sum
 end
+
+# project euler 29
+def distinct_powers(max)
+  powers = []
+  a = 2
+  while a <= max
+    b = 2
+    while b <= max
+      powers << a ** b
+      b += 1
+    end
+    a += 1
+  end
+  powers.uniq.length
+end
+
+# project euler 30
+def digit_fifth_powers(max)
+  powers = []
+  i = 10
+  while i <= max
+    powers << i if i == fifth_power(i)
+    i += 1
+  end
+  powers.inject(0) {|sum, i| sum + i}
+end
+
+def fifth_power(num)
+  sum = 0
+  num.to_s.each_char do |char|
+    sum += char.to_i ** 5
+  end
+  sum
+end
