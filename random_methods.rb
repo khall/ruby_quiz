@@ -1275,3 +1275,27 @@ def sum_collection(collection)
   collection[1] + 2 * collection[2] + 5 * collection[5] + 10 * collection[10] + 20 * collection[20] +
     50 * collection[50] + 100 * collection[100] + 200 * collection[200]
 end
+
+# project euler 32
+def pandigital_products
+  products = []
+  100.times do |multiplicand|
+    10_000.times do |multiplier|
+      product = multiplicand * multiplier
+      products << product if is_pandigital? [multiplicand, multiplier, product]
+    end
+  end
+  products.uniq.inject(0) {|sum, i| sum + i}
+end
+
+def is_pandigital?(nums)
+  chars = nums.flatten.inject(''){|str, num| str + num.to_s}
+  return false unless chars.index('0').nil?
+
+  digits = %w|1 2 3 4 5 6 7 8 9|
+  chars.each_char do |digit|
+    return false if digits.index(digit).nil?
+    digits.delete digit
+  end
+  digits.empty?
+end
