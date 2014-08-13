@@ -301,6 +301,52 @@ class Array
   end
 end
 
+# breadth first search
+class Node
+  attr_accessor :left, :right, :val
+  def initialize(r = nil, l = nil, v = nil)
+    @right = r
+    @left = l
+    @val = v
+  end
+
+  def self.bfs(needle, haystack)
+    return nil if haystack.nil?
+    return haystack if needle == haystack.val
+    found = nil
+    found = bfs needle, haystack.left
+    return found unless found.nil?
+    found = bfs needle, haystack.right
+    return found unless found.nil?
+    nil
+  end
+
+  def self.dfs(needle, haystack)
+    return nil if haystack.nil?
+    found = nil
+    found = dfs needle, haystack.left
+    return found unless found.nil?
+    found = dfs needle, haystack.right
+    return found unless found.nil?
+    return haystack if needle == haystack.val
+    nil
+  end
+end
+
+start = Node.new(
+    Node.new(
+        Node.new(nil, nil, 19),
+        Node.new(nil, nil, 15),
+        98
+    ),
+    Node.new(
+        Node.new(nil, nil, 54),
+        Node.new(nil, nil, 43),
+        72
+    ),
+    4
+)
+
 # project euler 1
 def multiples_of_x(num, x)
   len = num / x
@@ -1163,4 +1209,69 @@ def fifth_power(num)
     sum += char.to_i ** 5
   end
   sum
+end
+
+# project euler 31
+def coin_sums(amount)
+  order = [200, 100, 50, 20, 10, 5, 2, 1]
+  zeroed_coins = {1 => 0, 2 => 0, 5 => 0, 10 => 0, 20 => 0, 50 => 0, 100 => 0, 200 => 0}
+  coins = zeroed_coins.dup
+  good_combos = []
+  current = 0
+  coins[200] = amount / 200
+
+  while true
+    if sum_collection(coins) == amount
+      good_combos << coins.dup
+      break if coins.reject{|key, val| val == 0}.keys == [1] && current == order.length - 1 && sum_collection(coins) == amount
+      if no_larger_nonzeros?(coins, current)
+        current += 1
+        temp = zeroed_coins.dup
+        temp[order[current - 1]] = coins[order[current - 1]] - 1 if coins[order[current - 1]] > 0
+        coins = temp
+        coins[order[current]] = (amount - sum_collection(coins)) / order[current]
+        next
+      else
+        if order[current] == 1
+          coins[order[current]] = 0
+          while coins[order[current]] == 0 && current > 0 && current < order.length
+            current -= 1
+          end
+          coins[order[current]] -= 1 if coins[order[current]] > 0
+        else
+          coins[order[current]] -= 1 if order[current] != 1 && coins[order[current]] > 0
+        end
+      end
+      current += 1
+      sum = sum_collection(coins)
+      coins[order[current]] = (amount - sum) / order[current]
+      next
+    end
+    if sum_collection(coins) < amount
+      if sum_collection(coins) + order[current] > amount
+        # no more of the current coin, try a smaller one
+        current += 1
+        coins[order[current]] += 1
+      else
+        # keep incrementing current coin
+        coins[order[current]] += 1
+      end
+    end
+  end
+  good_combos.uniq
+end
+
+def no_larger_nonzeros?(coins, current)
+  order = [200, 100, 50, 20, 10, 5, 2, 1]
+  i = 0
+  while i < current
+    return false if coins[order[i]] != 0
+    i += 1
+  end
+  true
+end
+
+def sum_collection(collection)
+  collection[1] + 2 * collection[2] + 5 * collection[5] + 10 * collection[10] + 20 * collection[20] +
+    50 * collection[50] + 100 * collection[100] + 200 * collection[200]
 end
