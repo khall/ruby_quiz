@@ -1334,3 +1334,27 @@ def cancelable_digits?(a, b)
     [a[0], b[0]]
   end
 end
+
+# project euler 34
+def digit_factorials(max)
+  list = []
+  i = 3
+  while i < max
+    puts "." if i % 10_000 == 0
+    product = 0
+    i.to_s.each_char do |n|
+      product += factorial n
+    end
+    list << i if product == i
+    i += 1
+  end
+  list
+end
+
+def factorial(n)
+  product = 1
+  n.to_i.times do |n|
+    product *= n + 1
+  end
+  product
+end
