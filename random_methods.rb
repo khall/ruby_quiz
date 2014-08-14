@@ -1299,3 +1299,38 @@ def is_pandigital?(nums)
   end
   digits.empty?
 end
+
+# project euler 33
+def digit_canceling_fractions
+  list = []
+  numerator = 10
+  while numerator < 100
+    denominator = 10
+    while denominator < 100
+      if numerator < denominator
+        canceled = cancelable_digits?(numerator, denominator)
+        if canceled && (canceled[0].to_i / canceled[1].to_f) == (numerator.to_i / denominator.to_f)
+          list << [numerator, denominator]
+        end
+      end
+      denominator += 1
+    end
+    numerator += 1
+  end
+  list
+end
+
+def cancelable_digits?(a, b)
+  a = a.to_s
+  b = b.to_s
+  return false if a == b || a.length != 2 || b.length != 2 || (a[1] == '0' && b[1] == '0' && a[0] != b[0])
+  if b.index(a[0]) == 0
+    [a[1], b[1]]
+  elsif b.index(a[0]) == 1
+    [a[1], b[0]]
+  elsif b.index(a[1]) == 0
+    [a[0], b[1]]
+  elsif b.index(a[1]) == 1
+    [a[0], b[0]]
+  end
+end
