@@ -1358,3 +1358,25 @@ def factorial(n)
   end
   product
 end
+
+# project euler 35
+require 'prime'
+def circular_primes(max)
+  list = []
+  max.times do |n|
+    initial = n.to_s
+    all_primes = true
+    last_time = false
+    i = 1
+    while !last_time
+      last_time = true if initial == (rotated = initial.split('').rotate(i)).join('')
+      if !rotated.join('').to_i.prime?
+        all_primes = false
+        break
+      end
+      i += 1
+    end
+    list << n if all_primes
+  end
+  list
+end
