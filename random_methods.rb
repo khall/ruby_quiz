@@ -1520,3 +1520,19 @@ def champernowne
   end
   product
 end
+
+# project euler 41
+require 'prime'
+def pandigital_primes
+  largest = 0
+  digits = %w|1 2 3 4 5 6 7 8 9|
+  while digits.length > 0
+    digits.permutation.each do |sample|
+      sample_num = sample.join.to_i
+      puts "prime: #{sample_num}" if sample_num.prime?
+      largest = sample_num if sample_num > largest && sample_num.prime?
+    end
+    digits.pop
+  end
+  largest
+end
