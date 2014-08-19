@@ -1529,7 +1529,6 @@ def pandigital_primes
   while digits.length > 0
     digits.permutation.each do |sample|
       sample_num = sample.join.to_i
-      puts "prime: #{sample_num}" if sample_num.prime?
       largest = sample_num if sample_num > largest && sample_num.prime?
     end
     digits.pop
