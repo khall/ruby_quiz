@@ -529,7 +529,7 @@ def prime_summation(max)
     primes << i if i.prime?
     i += 2
   end
-  primes.inject(0){|sum, prime| sum + prime}
+  primes.inject(0){|sum, prime| sum + prime} + 2
 end
 
 # project euler 11
@@ -1379,4 +1379,71 @@ def circular_primes(max)
     list << n if all_primes
   end
   list
+end
+
+# project euler 36
+def double_base_palindromes(max)
+  list = []
+  max.times do |num|
+    list << num if palindrome?(num.to_s) && palindrome?(num.to_s(2))
+  end
+  list.inject(0) {|sum, i| sum + i}
+end
+
+def palindrome?(str)
+  while str.length > 1
+    return false if str[0] != str[str.length - 1]
+    str = str[1..-2]
+  end
+  true
+end
+
+# project euler 37
+def truncatable_primes(max)
+  list = []
+  num = 11
+  while num < max
+    num += 2
+    if (index = num.even_digit_pos) && num.to_s.length > 2
+      if index + 1 != num.to_s.length - 1
+        num_str = num.to_s
+        num_str[index] = (num_str[index].to_i + 1).to_s
+        num = num_str.to_i
+      end
+      num.to_s.length - index
+      next
+    end
+    list << num if num.front_and_back_prime?
+    break if list.length == 11
+  end
+  puts list
+  list.inject(0) {|sum, i| sum + i}
+end
+
+class Fixnum
+  def even_digit_pos
+    num_str = self.to_s
+    i = 0
+    while i < num_str.length
+      char = num_str[i]
+      if i == 0 && char == '2'
+        i += 1
+        next
+      end
+      return i if '02468'.index(char) != nil
+      i += 1
+    end
+    nil
+  end
+
+  def front_and_back_prime?
+    return false unless self.prime?
+    num_str = self.to_s
+    num_str.length.times do |i|
+      i += 1
+      return false unless num_str.slice(0, i).to_i.prime?
+      return false unless num_str.slice(-1 * i, num_str.length).to_i.prime?
+    end
+    true
+  end
 end
