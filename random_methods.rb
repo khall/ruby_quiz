@@ -1552,3 +1552,18 @@ class String
     self.upcase.chars.inject(0) {|sum, char| sum + (char.ord - 'A'.ord + 1)}
   end
 end
+
+# project euler 43
+def substring_divisibility
+  %w|0 1 2 3 4 5 6 7 8 9|.permutation.map(&:join).map(&:to_i).select(&:prime_divisible?).inject(0) {|sum, i| sum + i}
+end
+
+class Integer
+  def prime_divisible?
+    divisible_sets = {1 => 2, 2 => 3, 3 => 5, 4 => 7, 5 => 11, 6 => 13, 7 => 17}
+    divisible_sets.each do |key, value|
+      return false if self.to_s.slice(key, 3).to_i % value != 0
+    end
+    true
+  end
+end
