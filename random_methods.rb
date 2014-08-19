@@ -1535,3 +1535,20 @@ def pandigital_primes
   end
   largest
 end
+
+# project euler 42
+def triangle_words
+  triangle_numbers = []
+  30.times do |n|
+    n += 1
+    triangle_numbers << (0.5 * n * (n + 1)).to_i
+  end
+  words = File.open('euler_42.txt', 'r').read.gsub(/"/, '').split(',')
+  words.map(&:sum).reject{|num| ([num] & triangle_numbers).empty?}.length
+end
+
+class String
+  def sum
+    self.upcase.chars.inject(0) {|sum, char| sum + (char.ord - 'A'.ord + 1)}
+  end
+end
