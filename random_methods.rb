@@ -1504,3 +1504,19 @@ def integer_right_triangles
   end
   best_perimeter
 end
+
+# project euler 40
+def champernowne
+  next_digit = 1
+  product = 1
+  digit_count = 1
+  1_000_000.times do |i|
+    i += 1
+    if digit_count + i.to_s.length > next_digit
+      product *= i.to_s[next_digit - digit_count].to_i
+      next_digit *= 10
+    end
+    digit_count += i.to_s.length
+  end
+  product
+end
