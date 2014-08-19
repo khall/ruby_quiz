@@ -1476,3 +1476,31 @@ class String
     digits.empty?
   end
 end
+
+# project euler 39
+def integer_right_triangles
+  best = 0
+  best_perimeter = 0
+
+  1000.times do |perimeter|
+    solutions = []
+    perimeter += 1
+    (perimeter/2).ceil.times do |a|
+      a += 1
+      (perimeter/2).ceil.times do |b|
+        b += 1 + a
+        next if a > b
+        (perimeter/2).ceil.times do |c|
+          c += 1 + b
+          next if a > c || b > c || a + b + c != perimeter
+          solutions << [a, b, c] if a ** 2 + b ** 2 == c ** 2
+        end
+      end
+    end
+    if solutions.length > best
+      best = solutions.length
+      best_perimeter = perimeter
+    end
+  end
+  best_perimeter
+end
