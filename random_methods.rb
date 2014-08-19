@@ -1447,3 +1447,32 @@ class Fixnum
     true
   end
 end
+
+# project euler 38
+def pandigital_multiples
+  largest = 0
+  1_000_000.times do |num|
+    num += 1
+    result = ''
+    sequence = 1
+    while result.to_i < 1_000_000_000
+      result += (num * sequence).to_s
+      if result.pandigital?
+        largest = result.to_i if result.to_i > largest
+      end
+      sequence += 1
+    end
+  end
+  largest
+end
+
+class String
+  def pandigital?
+    return false if self.length != 9
+    digits = %w|1 2 3 4 5 6 7 8 9|
+    self.each_char do |char|
+      return false if digits.delete(char) == nil
+    end
+    digits.empty?
+  end
+end
