@@ -1583,3 +1583,21 @@ def pentagon_numbers
   end
   false
 end
+
+# project euler 45
+def tripenthex_numbers
+  tri_list = []
+  pent_list = []
+  hex_list = []
+  100_000.times do |n|
+    n += 1
+    tri_list << n * (n + 1) / 2
+    pent_list << n * (3 * n - 1) / 2
+    hex_list << n * (2 * n - 1)
+  end
+
+  tri_list.each do |tri|
+    return tri if pent_list.index(tri) != nil && hex_list.index(tri) != nil && tri > 40755
+  end
+  false
+end
