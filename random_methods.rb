@@ -1626,3 +1626,42 @@ def goldbachs_conjecture
   end
   false
 end
+
+# project euler 47
+def distinct_primes
+  100_000.times do |n|
+    n = (n + 1) * 4
+    if factors(n).length == 4
+      if offset = three_nearby_factors(n)
+        return n + offset
+      end
+    end
+  end
+  false
+end
+
+def three_nearby_factors(num)
+  nearby = [factors(num - 3), factors(num - 2), factors(num - 1), factors(num + 1), factors(num + 2), factors(num + 3)]
+  offset = nearby.map(&:length).join.index('444')
+  offset != nil ? offset - 3: false
+end
+
+def factors(num)
+  list = []
+  (num - 2).times do |n|
+    n += 2
+    list << n if num % n == 0 && n.prime?
+  end
+  list.uniq
+end
+
+# project euler 48
+def self_powers
+  sum = 0
+  1000.times do |n|
+    n += 1
+    sum += n ** n
+  end
+  sum = sum.to_s
+  sum.slice(sum.length - 10, 10)
+end
