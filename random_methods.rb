@@ -1601,3 +1601,28 @@ def tripenthex_numbers
   end
   false
 end
+
+# project euler 46
+require 'prime'
+def goldbachs_conjecture
+  odd_composites = Array.new(100_000) {|i| i}.select(&:odd?).reject(&:prime?)
+  primes = Array.new(100_000) {|i| i}.select(&:prime?)
+  doubled_squares = Array.new(100_000) {|i| i}.map{|i| 2 * (i ** 2)}
+  odd_composites.delete(1)
+  odd_composites.each do |composite|
+    primes.each do |prime|
+      break if prime > composite
+      doubled_squares.each do |square|
+        if square > composite
+          break
+        end
+        if composite == prime + square
+          composite = 0
+          break
+        end
+      end
+    end
+    return composite if composite != 0
+  end
+  false
+end
