@@ -1665,3 +1665,24 @@ def self_powers
   sum = sum.to_s
   sum.slice(sum.length - 10, 10)
 end
+
+# project euler 49
+def prime_permutations
+  primes = []
+  i = 1_000
+  while i < 10_000
+    primes << i if i.prime?
+    i += 1
+  end
+  primes.each do |a|
+    primes.each do |b|
+      break if b > a
+      primes.each do |c|
+        break if c > b
+        if a != b && b != c && b - a == c - b && c != 1487
+          return "#{c}#{b}#{a}" if (a.to_s.chars.permutation.to_a & [b.to_s.chars, c.to_s.chars]).length == 2
+        end
+      end
+    end
+  end
+end
