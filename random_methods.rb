@@ -1567,3 +1567,19 @@ class Integer
     true
   end
 end
+
+# project euler 44
+def pentagon_numbers
+  list = []
+  5_000.times do |n|
+    n += 1
+    list << n * (3 * n - 1) / 2
+  end
+  list.each do |j|
+    list.each do |k|
+      break if k > j
+      return j - k if list.index(j - k) != nil && list.index(j + k) != nil
+    end
+  end
+  false
+end
