@@ -1687,6 +1687,39 @@ def prime_permutations
   end
 end
 
+# project euler 50
+def consecutive_prime_sums(max)
+  primes = primes_up_to max
+  longest_run = 0
+  longest_run_prime = 0
+  i = 0
+  while i < primes.length
+    j = i + 1
+    sum = primes[i]
+    while j < primes.length
+      sum += primes[j]
+      break if sum > max
+      if sum.prime? && j - i > longest_run
+        longest_run = j - i
+        longest_run_prime = sum
+      end
+      j += 1
+    end
+    i += 1
+  end
+  longest_run_prime
+end
+
+def primes_up_to(max)
+  list = []
+  i = 1
+  while i < max
+    list << i if i.prime?
+    i += 1
+  end
+  list
+end
+
 # project euler 55
 def lychrel_numbers
   list = []
