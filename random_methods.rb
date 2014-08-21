@@ -1686,3 +1686,22 @@ def prime_permutations
     end
   end
 end
+
+# project euler 55
+def lychrel_numbers
+  list = []
+  10_000.times do |n|
+    n += 1
+    sum = n
+    lychrel = true
+    50.times do
+      sum = sum + sum.to_s.reverse.to_i
+      if sum.to_s == sum.to_s.reverse
+        lychrel = false
+        break
+      end
+    end
+    list << n if lychrel
+  end
+  list.length
+end
