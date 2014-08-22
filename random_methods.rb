@@ -1710,9 +1710,61 @@ def consecutive_prime_sums(max)
   longest_run_prime
 end
 
-def primes_up_to(max)
+def primes_up_to(min, max)
   list = []
-  i = 1
+  i = min
+  while i < max
+    list << i if i.prime?
+    i += 1
+  end
+  list
+end
+
+# project euler 51
+def prime_digit_replacement
+  primes = Hash[primes_up_to(100_000, 1_000_000).map.with_index.to_a]
+  relatives = related_num('AAAAAA')
+  primes.each do |prime, index|
+    my_relatives = customize_permutations(prime, relatives)
+    my_relatives.each do |relative|
+      matched = []
+      9.times do |n|
+        break if n - matched.length > 1
+        n += 1
+        if primes[relative.gsub(/x/, n.to_s).to_i] != nil
+          matched << relative.gsub(/x/, n.to_s)
+        end
+      end
+      return matched.min if matched.length == 8
+    end
+  end
+  false
+end
+
+def customize_permutations(num, permutations)
+  i = 0
+  while i < num.to_s.length
+    permutations = permutations.each{|perm|
+      perm[i] = num.to_s[i] if perm[i] != 'x'}
+    i += 1
+  end
+  permutations.reject{|n| n[0] == '0'}
+end
+
+def related_num(num)
+  replacements = []
+  num_replacements = 1
+  num_len = num.to_s.length
+  while num_replacements < num_len
+    replacements << (num.to_s + 'x' * num_replacements).chars.permutation(num_len).to_a.select{|a| a.count('x') == num_replacements}.map(&:join).uniq
+    num_replacements += 1
+  end
+  replacements.flatten
+end
+
+def primes_up_to(min, max)
+  list = []
+  i = min
   while i < max
     list << i if i.prime?
     i += 1
