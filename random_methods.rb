@@ -1772,6 +1772,31 @@ def primes_up_to(min, max)
   list
 end
 
+# project euler 52
+def permuted_multiples
+  1_000_000.times do |n|
+    n += 1
+    answer_found = true
+    5.times do |multiplier|
+      multiplier += 2
+      product = (n * multiplier).to_s.split('')
+      if product.length != n.to_s.length
+        answer_found = false
+        break
+      end
+      n.to_s.each_char do |char|
+        product.delete char
+      end
+      if product.length != 0
+        answer_found = false
+        break
+      end
+    end
+    return n if answer_found
+  end
+  false
+end
+
 # project euler 55
 def lychrel_numbers
   list = []
