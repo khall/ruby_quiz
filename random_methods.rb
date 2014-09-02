@@ -60,6 +60,17 @@ def bs(needle, haystack, offset = 0)
   end
 end
 
+def bs2(needle, haystack, offset = 0)
+  return nil if haystack.length == 0
+  halfway = haystack.length / 2
+  return halfway + offset if needle == haystack[halfway]
+  if needle > haystack[halfway]
+    bs2(needle, haystack[halfway+1..-1], offset + halfway + 1)
+  else
+    bs2(needle, haystack[0..halfway-1], offset)
+  end
+end
+
 class Node
   @data = nil
   @right = nil
@@ -218,6 +229,20 @@ def largest_contiguous_sum(arr)
     highest = max if highest.nil? || highest < max
   end
   highest
+end
+
+def largest_contiguous_sum2(arr)
+  largest_sum = [0, 0, 0] # start index, stop index, sum
+  arr.each_index do |i|
+    arr.each_index do |j|
+      break if j < i
+      sum = arr[i..j].inject(0) {|sum, i| sum + i}
+      if sum > largest_sum[2]
+        largest_sum = [i, j, sum]
+      end
+    end
+  end
+  largest_sum
 end
 
 def shuffle(arr)
@@ -1795,6 +1820,29 @@ def permuted_multiples
     return n if answer_found
   end
   false
+end
+
+# project euler 53
+def combinatoric_selections
+  count = 0
+  100.times do |x|
+    x += 1
+    100.times do |y|
+      y += 1
+      break if y > x
+      count += 1 if x_choose_y(x, y) > 1_000_000
+    end
+  end
+  count
+end
+
+def x_choose_y(x, y)
+  factorial(x) / (factorial(y) * factorial(x - y))
+end
+
+def factorial(n)
+  return 1 if n == 0
+  (1..n).inject(1){|product, i| product * i}
 end
 
 # project euler 55
